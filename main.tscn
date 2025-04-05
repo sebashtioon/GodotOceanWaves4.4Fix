@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dx4r13gqfh13"]
+[gd_scene load_steps=28 format=3 uid="uid://dx4r13gqfh13"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_skarq"]
 [ext_resource type="Script" path="res://assets/water/wave_cascade_parameters.gd" id="2_pw5n6"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/spatial/sea_spray.gdshader" id="8_eu8jb"]
 [ext_resource type="Material" uid="uid://5xqyddws6rt5" path="res://assets/water/mat_spray.tres" id="9_skbf4"]
 [ext_resource type="Texture2D" uid="uid://dtm5tyuh2slqt" path="res://assets/water/sea_spray.png" id="10_spqpo"]
+[ext_resource type="Script" path="res://assets/player/waveheight_script.gd" id="16_veajc"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_t7jwl"]
 panorama = ExtResource("3_0ksgj")
@@ -89,7 +90,7 @@ seamless = true
 noise = SubResource("FastNoiseLite_k6xhe")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ds3o1"]
-render_priority = 0
+render_priority = -1
 shader = ExtResource("8_eu8jb")
 shader_parameter/max_alpha = 0.666
 shader_parameter/albedo_texture = ExtResource("10_spqpo")
@@ -102,6 +103,19 @@ density = 8.0
 albedo = Color(0.988718, 0.989631, 0.989629, 1)
 height_falloff = 0.176
 edge_fade = 1.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wy12m"]
+albedo_color = Color(0.937563, 0.704479, 0.474746, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dssde"]
+radius = 2.0
+height = 74.0
+radial_segments = 24
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vjgfr"]
+transparency = 1
+albedo_color = Color(0.937563, 0.704479, 0.474746, 1)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_skarq")
@@ -121,7 +135,7 @@ transform = Transform3D(-0.996195, -0.0151344, 0.0858316, 0, 0.984807, 0.173648,
 script = ExtResource("4_v2yip")
 
 [node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -10)
 sorting_offset = 999.0
 material_override = ExtResource("5_lt75t")
 cast_shadow = 0
@@ -152,3 +166,17 @@ autoplay = true
 stream = ExtResource("8_6r5si")
 volume_db = -30.0
 autoplay = true
+
+[node name="Buoy" type="MeshInstance3D" parent="." node_paths=PackedStringArray("water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.80359, 0)
+material_override = SubResource("StandardMaterial3D_wy12m")
+mesh = SubResource("CapsuleMesh_dssde")
+script = ExtResource("16_veajc")
+water = NodePath("../Water")
+
+[node name="Buoy_transparent" type="MeshInstance3D" parent="." node_paths=PackedStringArray("water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -1.01074, 0)
+material_override = SubResource("StandardMaterial3D_vjgfr")
+mesh = SubResource("CapsuleMesh_dssde")
+script = ExtResource("16_veajc")
+water = NodePath("../Water")

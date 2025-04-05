@@ -1,3 +1,30 @@
+# KrautDev Fork of GodotOceanWaves
+This fork aims to add several features to make this amazing ocean implementation usable in a Godot game project.
+### Functional
+#### Water Height at any Global Position
+- [x] Get current height of the water line at any world position. `water.gd` has `get_height(world_pos:Vector3, steps:int=3) -> float` that returns the global y value of a provided global position.
+- [ ] Write async readback from GPU. The displacement textures are loaded from GPU via `RenderingServer.texture_get_data` passing the RID of the textures which is saved in `wave_generator.descriptors[&'displacement_map'].rid`. I'm still figuring out how a separate thread can be used to read back the textures from GPU to CPU without additional waiting times due to mutexes blocking each other.
+#### Buoyancy
+there are different approaches to do it for ships and other larger objects:
+  1) let the object sit on several buoy objects that create an upward force depending on the depth of the buoy in the water (https://www.fxguide.com/fxfeatured/assassins-creed-iii-the-tech-behind-or-beneath-the-action/)
+  2) calculate the forces on each triangle of a simplified mesh (https://www.gamedeveloper.com/programming/water-interaction-model-for-boats-in-video-games, https://www.gamedeveloper.com/programming/water-interaction-model-for-boats-in-video-games-part-2). Both solutions are quite old, but the latter seems very promising.
+### Appearence
+#### Clip Map Resolution and Size
+- [x] 8 kilometers clipmap with LOD
+#### Waterline Transition
+- [x] added a fade effect between the water and non-transparent geoemtries
+#### Depth dependend visibility of Objects
+Water appears blue if it is clear and the entering light contains blue light, but turqoise if it is shallow and turbulent. Here are some visualizations: (https://rwu.pressbooks.pub/webboceanography/chapter/6-5-light/)
+- [x] a transition is in place that simulates the absorption of red and green and finally blue light with increasing depth. The user can control these numbers in `water.gdshader` with the parameter `uniform vec3 depth_color_consumption = vec3(7.5, 22.0, 38.0);`. Coastal waters would absorb much more blue, so you would choose e.g. 18.0 for blue to make it greenish turqoise.
+- [x] water visibility range control
+- [ ] allow less clear water by mixing in the water color
+#### Keep Water out of Boats
+There are again different appraoches to not see the water surface in a boat:
+- [ ] mesh mask alpha above it (https://forum.godotengine.org/t/how-to-hide-the-water-plane-inside-a-boat/27380/2). That also means that any object with transparency cannot be seen in the boat. Also the mask only works as long as the camera is outside of the masking mesh.
+- [ ] vertex displacement: all vertices are pushed down to the height of the boat. I think it would work similarly to this https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3DoMzI9DLgPKc&ved=2ahUKEwiPxsWouMqLAxUiYPEDHX9QAOIQtwJ6BAgQEAI&usg=AOvVaw0ws-MlQZ0GMym1ltAlimxn. The vertex shader would need a mask `M` that contains the difference between the water plane before displacements and the surface of the swimming body. Each vertex after displacement would query `M` with a UV that respects the summed displacements of the vertex and sets the Y coordinate accordingly. Since the water surface can be very large (e.g. 8 km), `M` would be much smaller and only roughly about the size of the boat. It would be necessary to scale and re-locate the adjusted UVs to query the correct position of a much smaller `M`.
+
+
+
 # GodotOceanWaves
 An open ocean rendering experiment in the Godot Engine utilizing the inverse Fourier transform of directional ocean-wave spectra for wave generation. A concise set of parameters is exposed, allowing for scriptable, real-time modification of wave properties to emulate a wide-variety of ocean-wave environments.
 

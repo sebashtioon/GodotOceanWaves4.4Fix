@@ -15,6 +15,7 @@ var should_render_imgui := not Engine.is_editor_hint()
 @onready var _water_color := [water.water_color.r, water.water_color.g, water.water_color.b]
 @onready var _foam_color := [water.foam_color.r, water.foam_color.g, water.foam_color.b]
 @onready var _is_sea_spray_visible := [true]
+@onready var _update_textures := [true]
 
 func _init() -> void:
 	if Engine.is_editor_hint(): return
@@ -77,6 +78,9 @@ func _render_imgui() -> void:
 				clipmap_tile_size = 1.0 if mesh_quality == water.MeshQuality.HIGH else 4.0
 		ImGui.EndCombo()
 	imgui_text_tooltip('Updates per Second:', 'Denotes how many times wave spectrums will be updated per second.\n(0 is uncapped)'); ImGui.SameLine(); if ImGui.SliderFloat('##update_rate', _updates_per_second, 0, 60): water.updates_per_second = _updates_per_second[0]
+	ImGui.Text('Get displacement textures from GPU:  '); ImGui.SameLine(); if ImGui.Checkbox('##update_textures_checkbox', _update_textures): water.update_textures = _update_textures[0]
+	
+	
 	ImGui.Text('Water Color:       '); ImGui.SameLine(); if ImGui.ColorButtonEx('##water_color_button', water.water_color, ImGui.ColorEditFlags_Float, Vector2(ImGui.GetColumnWidth(), ImGui.GetFrameHeight())): ImGui.OpenPopup('water_color_picker')
 	if ImGui.BeginPopup('water_color_picker'):
 		if ImGui.ColorPicker3('##water_color_picker', _water_color, ImGui.ColorEditFlags_Float | ImGui.ColorEditFlags_NoSidePreview | ImGui.ColorEditFlags_DisplayRGB | ImGui.ColorEditFlags_DisplayHex):
