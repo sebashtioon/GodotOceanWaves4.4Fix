@@ -5,7 +5,7 @@ extends MeshInstance3D
 
 const WATER_MAT := preload('res://assets/water/mat_water.tres')
 const SPRAY_MAT := preload('res://assets/water/mat_spray.tres')
-const WATER_MESH_HIGH8K := preload('res://assets/water/clipmap_high.obj')
+const WATER_MESH_HIGH8K := preload('res://assets/water/clipmap_high_8k.obj')
 const WATER_MESH_HIGH := preload('res://assets/water/clipmap_high.obj')
 const WATER_MESH_LOW := preload('res://assets/water/clipmap_low.obj')
 

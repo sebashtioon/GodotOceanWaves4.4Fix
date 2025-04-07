@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dx4r13gqfh13"]
+[gd_scene load_steps=26 format=3 uid="uid://dx4r13gqfh13"]
 
 [ext_resource type="Script" uid="uid://bap0ysmcgyau1" path="res://main.gd" id="1_skarq"]
 [ext_resource type="Script" uid="uid://dmyajin516u2j" path="res://assets/water/wave_cascade_parameters.gd" id="2_pw5n6"]
@@ -12,6 +12,8 @@
 [ext_resource type="Shader" uid="uid://bqjnfa67oi6yh" path="res://assets/shaders/spatial/sea_spray.gdshader" id="8_eu8jb"]
 [ext_resource type="Material" uid="uid://5xqyddws6rt5" path="res://assets/water/mat_spray.tres" id="9_skbf4"]
 [ext_resource type="Texture2D" uid="uid://dtm5tyuh2slqt" path="res://assets/water/sea_spray.png" id="10_spqpo"]
+[ext_resource type="PackedScene" uid="uid://16i6oo1e40h8" path="res://tests/float_test.tscn" id="13_w48qg"]
+[ext_resource type="Script" uid="uid://w5xg4n08ctb4" path="res://new_waveheight_script.gd" id="14_vivmo"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_t7jwl"]
 panorama = ExtResource("3_0ksgj")
@@ -153,3 +155,7 @@ autoplay = true
 stream = ExtResource("8_6r5si")
 volume_db = -30.0
 autoplay = true
+
+[node name="float_test_box" parent="." node_paths=PackedStringArray("water") instance=ExtResource("13_w48qg")]
+script = ExtResource("14_vivmo")
+water = NodePath("../Water")

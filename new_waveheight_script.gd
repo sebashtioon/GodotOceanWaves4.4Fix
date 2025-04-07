@@ -10,6 +10,4 @@ extends RigidBody3D
 @export var points_array : Array[Node3D]
 
 func _physics_process(delta: float) -> void:
-	
-	for point in points_array:
-		pass
+	global_position.y = water.get_height(global_position)
